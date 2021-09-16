@@ -1,24 +1,16 @@
-import logo from './logo.svg';
-import './App.css';
+import Container from "react-bootstrap/Container";
+import { OrderDetailsProvider } from "./contexts/OrderDetails";
+import OrderEntry from "./pages/entry/OrderEntry";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Container>
+      <OrderDetailsProvider>
+        {/* summary and entry page need the state from the provider */}
+        <OrderEntry />
+      </OrderDetailsProvider>
+      {/* confirmation page does not need to know about the state from the provider */}
+    </Container>
   );
 }
 
