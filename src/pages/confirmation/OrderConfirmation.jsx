@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { useOrderDetails } from "../../contexts/OrderDetails";
+import AlertBanner from "../common/AlertBanner";
 
 export default function OrderConfirmation({ setOrderPhase }) {
   const [, , resetOrder] = useOrderDetails(); //extract the resetOrder function from context
@@ -10,12 +11,19 @@ export default function OrderConfirmation({ setOrderPhase }) {
     axios
       .post("http://localhost:3030/order")
       .then((res) => setOrderNumber(res.data.orderNumber))
-      .catch((error) => console.log(error));
+      .catch((error) => setError(true));
   }, []);
+
+  if (error) {
+    return <AlertBanner message={null} variant={null} />;
+  }
+
   const handleClick = () => {
     resetOrder();
     setOrderPhase("inProgress"); //send back to reg order page
   };
+  
+
   if (orderNumber) {
     return (
       <div style={{ textAlign: "center" }}>
@@ -28,5 +36,4 @@ export default function OrderConfirmation({ setOrderPhase }) {
   } else {
     return <div>...Loading</div>;
   }
-  //   return <div>{orderNumber ? orderNumber : "...Loading"}</div>;
 }

@@ -1,6 +1,7 @@
 import { render, screen } from "../../../test-utils/testing-library-utils";
 import { OrderDetailsProvider } from "../../../contexts/OrderDetails";
 import Options from "../Options";
+import userEvent from "@testing-library/user-event";
 
 test("displays image for each scoop option from server", async () => {
   render(<Options optionType="scoops" />);
@@ -36,4 +37,18 @@ test("displays an image for each toppings option returned from server", async ()
     "Sprinkles topping",
     "Hot fudge topping",
   ]);
+});
+
+test("scoop total should not update when input invalid", async () => {
+  render(<Options optionType="scoops" />);
+  //find the vanilla and update with a shitty input
+  const vanillaInput = await screen.findByRole("spinbutton", {
+    name: "Vanilla",
+  });
+  //find the subtotal and make sure it is still 0.00
+  userEvent.clear(vanillaInput);
+  userEvent.type(vanillaInput, "-5");
+
+  const scoopsSubtotal = screen.getByText("Scoops total:", { exact: false });
+  expect(scoopsSubtotal).toHaveTextContent("0.00");
 });
